@@ -1,0 +1,19 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" rx="12" fill="url(#gradient)"/>
+  
+  <!-- Key icon - larger -->
+  <path d="M44 24C44 19.5817 40.4183 16 36 16C31.5817 16 28 19.5817 28 24C28 27.7276 30.5488 30.8598 34 31.748V40H30V44H34V48H38V44H42V40H38V31.748C41.4512 30.8598 44 27.7276 44 24Z" fill="white"/>
+  <circle cx="36" cy="24" r="4" fill="#60A5FA"/>
+  
+  <!-- Hot indicator (flame) - larger -->
+  <path d="M18 36C18 33 20 30 22 28C23 30 25 31 26 34C26.4 35.6 26 37 25 38C24 39 22 39.6 21 39C19 38 18 37 18 36Z" fill="#EF4444"/>
+  <path d="M22 29C22.4 30.4 23.6 31 24 32C24.4 33 24 34 23.4 34.6C22.8 35.2 21.6 35.4 21 35C20 34.4 20 33 20.4 32C20.8 31 21.4 30 22 29Z" fill="#FCD34D"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+</svg>
