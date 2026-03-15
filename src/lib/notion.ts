@@ -85,6 +85,10 @@ export function transformNotionPageToPost(page: any): BlogPost {
     // Extract content URL
     const contentUrl = properties.Content?.url || null;
     
+    if (thumbnailUrl && thumbnailUrl.startsWith('http://')) {
+      thumbnailUrl = thumbnailUrl.replace('http://', 'https://');
+    }
+
     const post = {
       id: page.id,
       title: properties.Name?.title?.[0]?.plain_text || 'Untitled',
