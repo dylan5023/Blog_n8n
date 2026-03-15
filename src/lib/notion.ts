@@ -112,18 +112,17 @@ export function transformNotionPageToPost(page: any): BlogPost {
   }
 }
 
-// Fetch content from external URL
-async function fetchContentFromUrl(url: string): Promise<string> {
+// Fetch content from external URL (returns null on failure to allow fallback)
+async function fetchContentFromUrl(url: string): Promise<string | null> {
   try {
     console.log('🌐 Fetching content from URL:', url);
     
-    // Check if it's a Google Sheets URL
     if (url.includes('docs.google.com/spreadsheets')) {
       return await fetchGoogleSheetsContent(url);
     }
     
     const response = await fetch(url, {
-      cache: 'no-store', // Disable Next.js caching
+      cache: 'no-store',
       headers: {
         'Cache-Control': 'no-cache',
       },
@@ -135,20 +134,17 @@ async function fetchContentFromUrl(url: string): Promise<string> {
     
     const contentType = response.headers.get('content-type');
     
-    // If it's JSON, extract text content
     if (contentType?.includes('application/json')) {
       const data = await response.json();
-      // Assuming the JSON has a 'content' or 'text' field
       return data.content || data.text || JSON.stringify(data);
     }
     
-    // If it's HTML or plain text
     const text = await response.text();
     console.log('✅ Content fetched successfully, length:', text.length);
     return text;
   } catch (error) {
     console.error('❌ Error fetching content from URL:', url, error);
-    return `Error loading content from URL: ${url}\n\nError: ${error}`;
+    return null;
   }
 }
 
@@ -192,7 +188,8 @@ async function fetchGoogleSheetsContent(url: string): Promise<string> {
     });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch Google Sheets: ${response.statusText}. Make sure the sheet is publicly accessible.`);
+      console.warn(`⚠️ Google Sheets not accessible (${response.status}), will use Notion content instead`);
+      return null;
     }
     
     const csvText = await response.text();
@@ -207,7 +204,7 @@ async function fetchGoogleSheetsContent(url: string): Promise<string> {
     return markdown;
   } catch (error) {
     console.error('❌ Error fetching Google Sheets:', error);
-    return `## Error loading Google Sheets content\n\nPlease make sure:\n1. The Google Sheet is shared publicly (Anyone with the link can view)\n2. The URL is correct\n\nOriginal URL: ${url}\n\nError: ${error}`;
+    return null;
   }
 }
 
@@ -453,10 +450,17 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
           const page = pageResponse.results[0];
           const post = transformNotionPageToPost(page);
           
-          // Get page content - prioritize Content URL if available
           if (post.contentUrl) {
-            console.log('📄 Using content from URL:', post.contentUrl);
-            post.content = await fetchContentFromUrl(post.contentUrl);
+            console.log('📄 Trying content from URL:', post.contentUrl);
+            const externalContent = await fetchContentFromUrl(post.contentUrl);
+            if (externalContent) {
+              post.content = externalContent;
+            } else {
+              console.log('⚠️ External content failed, falling back to Notion page');
+              const mdBlocks = await n2m.pageToMarkdown(page.id);
+              const markdown = n2m.toMarkdownString(mdBlocks);
+              post.content = markdown.parent;
+            }
           } else {
             console.log('📄 Using content from Notion page');
             const mdBlocks = await n2m.pageToMarkdown(page.id);
@@ -478,11 +482,18 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     const page = results[0];
     const post = transformNotionPageToPost(page);
 
-    // Get page content - prioritize Content URL if available
     if (post.contentUrl) {
-      console.log('📄 Using content from URL:', post.contentUrl);
-      post.content = await fetchContentFromUrl(post.contentUrl);
-      console.log('📝 Content preview (first 500 chars):', post.content.substring(0, 500));
+      console.log('📄 Trying content from URL:', post.contentUrl);
+      const externalContent = await fetchContentFromUrl(post.contentUrl);
+      if (externalContent) {
+        post.content = externalContent;
+        console.log('📝 Content preview (first 500 chars):', post.content.substring(0, 500));
+      } else {
+        console.log('⚠️ External content failed, falling back to Notion page');
+        const mdBlocks = await n2m.pageToMarkdown(page.id);
+        const markdown = n2m.toMarkdownString(mdBlocks);
+        post.content = markdown.parent;
+      }
     } else {
       console.log('📄 Using content from Notion page');
       const mdBlocks = await n2m.pageToMarkdown(page.id);
