@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { BlogPost } from '@/types/notion';
 import { formatDate } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -22,12 +21,11 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-blue-50 via-amber-50/50 to-orange-50">
         {thumbnailUrl ? (
           <>
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={thumbnailUrl}
               alt={post.title}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
