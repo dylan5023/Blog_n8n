@@ -102,10 +102,13 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Notion page created:', response.id);
 
+    // Construct blog URL
+    const blogUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${slug}`;
+
     return NextResponse.json({
       success: true,
       pageId: response.id,
-      url: response.url,
+      blogUrl: blogUrl,
       slug: slug,
       message: 'Post created successfully',
     });
