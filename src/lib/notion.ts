@@ -153,7 +153,7 @@ async function fetchContentFromUrl(url: string): Promise<string | null> {
 }
 
 // Fetch content from Google Sheets
-async function fetchGoogleSheetsContent(url: string): Promise<string> {
+async function fetchGoogleSheetsContent(url: string): Promise<string | null> {
   try {
     console.log('📊 Fetching Google Sheets content from:', url);
     
