@@ -12,17 +12,18 @@ interface PostCardProps {
 
 export default function PostCard({ post }: PostCardProps) {
   const { t } = useLanguage();
-  
+  const thumbnailUrl = post.thumbnailUrl?.replace(/^http:\/\//, 'https://') || null;
+
   return (
     <Link
       href={`/blog/${post.slug}`}
       className="group block rounded-xl overflow-hidden bg-white border border-gray-100 hover:border-blue-400 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-blue-50 via-amber-50/50 to-orange-50">
-        {post.thumbnailUrl ? (
+        {thumbnailUrl ? (
           <>
             <Image
-              src={post.thumbnailUrl}
+              src={thumbnailUrl}
               alt={post.title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

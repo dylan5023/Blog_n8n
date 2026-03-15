@@ -48,7 +48,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
         <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={post.thumbnailUrl}
+            src={post.thumbnailUrl.replace(/^http:\/\//, 'https://')}
             alt={post.title}
             className="w-full h-auto"
           />
