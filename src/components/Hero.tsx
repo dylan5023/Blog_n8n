@@ -3,8 +3,6 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Hero() {
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'My Blog';
-  const siteDescription = process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'Welcome to my blog';
   const { t } = useLanguage();
 
   return (
@@ -14,11 +12,11 @@ export default function Hero() {
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
             <span className="block bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
-              {siteName}
+              Diamond Analytics
             </span>
           </h1>
           <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed">
-            {siteDescription}
+            Your premier baseball analytics dashboard. Dive deep into comprehensive baseball statistics, game insights, and player performance analysis.
           </p>
           <div className="flex items-center justify-center gap-4">
             <a
